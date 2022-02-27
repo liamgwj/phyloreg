@@ -1,0 +1,9 @@
+LJ 2022-02-24 extract family/genus pairs from TPL csv files
+
+in terminal:
+
+for file in ~/Desktop/TPL/*
+do
+  cut -f 3,5 -d , "$file" >> results.out
+done
+

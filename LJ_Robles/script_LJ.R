@@ -1,5 +1,6 @@
 
-# this workflow is a little silly - using averaged model coefficients to make per-focal host predictions, then averaging those predictions again...
+# this workflow is a little silly - using averaged model coefficients to make
+# per-focal host predictions, then averaging those predictions again...
 
 # Q: better to bootstrap with large n or have exactly one run per focal host?
 
@@ -93,7 +94,8 @@ write.csv(out_data, paste0("output/", rownames(mx_pest)[p], "/focalPlus_", n, "_
 
 ## phylogeny plots
 
-# for focal pest, loop through known hosts and plot predicted suitability for each tip on the phylogeny
+# for focal pest, loop through known hosts and plot predicted suitability for
+# each tip on the phylogeny
 
 # all known hosts of focal pest
 hosts_pest_focal <- names(mx_pest[ind_pest_focal,
