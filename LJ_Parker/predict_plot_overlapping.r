@@ -1,8 +1,6 @@
 # modified from
 # LJ 2022-02-28 generic model prediction and plot generation script
-# works but needs cleaning up
 
-setwd("/home/liam/Documents/MSc/analysis/phyloreg")
 
 pestTypes <- c("Bacterium", "Fungus", "Insect", "Mite", "Mollusk", "Nematode",
                "Phytoplasma", "Viroid", "Virus", "Weed")
