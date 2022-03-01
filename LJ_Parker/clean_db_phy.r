@@ -64,6 +64,10 @@ dbfg <- dbfg[-c(which(dbfg$Family=="Ditrichaceae" & dbfg$Genus=="Cynodon"),
                 which(dbfg$Family=="Rhamnaceae" & dbfg$Genus=="Ziziphus")
                 ),]
 
+# phylogeny -----------------------
+# make ultrametric
+phy <- force.ultrametric(phy, method = "extend")
+## this is a crappy workaround - need to properly trace problem
 
 # IDENTIFY GENERA TO ADD ######################################################
 
@@ -167,6 +171,14 @@ phy <- bind.tree(phy,
                           1])
 }
 
+
+
+####
+###
+# plot(extract.clade(phy, getMRCA(phy,c("rosaceae","malus")))) 
+##
+###
+
 # CASE 3 ---------------------------------------------------
 
 # 3 genera from 2 families to be handled case-by-case
@@ -193,6 +205,19 @@ phy <- bind.tip(phy,
 
 # WRITE OUTPUT ################################################################
 
+# Final misc rearranging - intergrate this earlier
+# db
+# set row names to pest names
+rownames(db) <- db$Pestcode
+# remove pest name column
+db <-  db[, !names(db)%in%"Pestcode"]
+# remove pests that infect only one host
+db <- db[which(rowSums(db)>1),]
+# phy
+# drop tips not in pest/host database
+phy <- keep.tip(phy, colnames(db))
+
+
 write.tree(phy,
            paste0("output/cleaned_Parker_phylogeny_",
                   Sys.Date(),
@@ -202,5 +227,5 @@ write.csv(db,
           paste0("output/cleaned_Parker_database_",
                  Sys.Date(),
                  ".csv"),
-          row.names = FALSE)
+          row.names = TRUE)
 
