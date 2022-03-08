@@ -47,8 +47,10 @@ db <- db[, -which(colSums(db) == 0)]
 phy <- keep.tip(phy_safe, colnames(db))
 
 # single pest type ---------------------
+# Parker types: Bacterium Fungus Insect Mite Mollusk Nematode Phytoplasma
+# Viroid Virus Weed
 
-db <- db_safe[grep("Virus", rownames(db_safe)),]
+db <- db_safe[grep("Weed", rownames(db_safe)),]
 
 if(min(colSums(db)) == 0){
 db <- db[, -which(colSums(db) == 0)]
@@ -58,6 +60,9 @@ phy <- keep.tip(phy_safe, colnames(db))
 
 
 # source model script ----------------------------------------------------------
+
+# set ID for file naming
+ID <- "parker-weed"
 
 source("/home/liam/Documents/MSc/analysis/phyloreg/logreg_generic.r")
 

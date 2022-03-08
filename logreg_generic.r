@@ -94,7 +94,7 @@ now <- gsub(":", "-", gsub(" ", "T", Sys.time()))
 
 # write out all coefficients
 write.csv(coef,
-          paste0(dirname, "coef_", now, ".csv"),
+          paste0(dirname, ID, "_coef_", now, ".csv"),
           row.names = FALSE)
 
 # average coefficients for each pest
@@ -104,6 +104,6 @@ coef_av <- aggregate(coef[,-which(colnames(coef)%in%c("Pest", "FocalHost"))],
 
 # write out averaged coefficients
 write.csv(coef_av,
-          paste0(dirname, "coef-av_", now, ".csv"),
+          paste0(dirname, ID, "_coef-av_", now, ".csv"),
           row.names = FALSE)
 

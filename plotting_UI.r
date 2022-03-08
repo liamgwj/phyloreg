@@ -3,12 +3,20 @@
 
 # choose dataset/model coefficient files to plot -------------------------------
 
+# Parker 2015 -------------------
+
+setwd("/home/liam/Documents/MSc/analysis/phyloreg/LJ_Parker")
+
+coef_1 <- read.csv("output/model_coefficients/parker-all_coef-av_2022-03-08T09-49-55.csv")
+coef_2 <- read.csv("output/model_coefficients/parker-weed_coef-av_2022-03-08T10-33-40.csv")
+
+
 # Robles 2017 -------------------
 
 setwd("/home/liam/Documents/MSc/analysis/phyloreg/LJ_Robles")
 
-coef_1 <- read.csv("output/model_coefficients/coef-av_2022-03-07T14-56-18.csv")
-coef_2 <- read.csv("output/model_coefficients/coef-av_2022-03-07T15-00-21.csv")
+coef_1 <- read.csv("output/model_coefficients/robles-all_coef-av_2022-03-08T09-57-30.csv")
+coef_2 <- read.csv("output/model_coefficients/robles-half_coef-av_2022-03-08T09-58-43.csv")
 
 
 # format list of coefficients --------------------------------------------------
@@ -24,6 +32,9 @@ coef_lst[[i]] <- rbind(coef_1[which(coef_1$Pest == coef_2$Pest[i]) ,],
 
 
 # source plotting script -------------------------------------------------------
+
+# set ID for file naming
+ID <- "parker-all-weed"
 
 source("/home/liam/Documents/MSc/analysis/phyloreg/predict_plot_generic.r")
 

@@ -33,7 +33,7 @@ prob_lst <- rapply(prob_lst, function(x){ifelse(is.na(x), 1, x)},
 
 
 # create output directory
-dirname <- paste0("output/plots_", gsub(":", "-", gsub(" ", "T", Sys.time())))
+dirname <- paste0("output/plots/", ID, "_", gsub(":", "-", gsub(" ", "T", Sys.time())))
 dir.create(dirname, recursive = TRUE)
 
 
