@@ -86,10 +86,24 @@ coef <- rbind(coef, run_coef)
 } # end of host loop (j)
 } # end of pest loop (i) ---------------------------------------------
 
-# write out model output
+# OUTPUT ######################################################################
+
+dirname <- "output/model_coefficients/"
+dir.create(dirname, recursive = TRUE)
+now <- gsub(":", "-", gsub(" ", "T", Sys.time()))
+
+# write out all coefficients
 write.csv(coef,
-          paste0("coefficients_",
-                 Sys.Date(),
-                 ".csv"),
+          paste0(dirname, "coef_", now, ".csv"),
+          row.names = FALSE)
+
+# average coefficients for each pest
+coef_av <- aggregate(coef[,-which(colnames(coef)%in%c("Pest", "FocalHost"))],
+                     list(Pest = coef$Pest),
+                     mean)
+
+# write out averaged coefficients
+write.csv(coef_av,
+          paste0(dirname, "coef-av_", now, ".csv"),
           row.names = FALSE)
 

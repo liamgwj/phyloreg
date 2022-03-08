@@ -229,3 +229,11 @@ write.csv(db,
                  ".csv"),
           row.names = TRUE)
 
+
+
+
+
+# aggregate(db, list(type = gsub("[0-9]", "", rownames(db))), sum)
+
+# sort(colSums(ifelse(aggregate(db, list(type = gsub("[0-9]", "", rownames(db))), sum) > 0, 1, 0)))
+

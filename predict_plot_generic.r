@@ -1,47 +1,79 @@
 # LJ 2022-02-28 generic model prediction and plot generation script
 
-# requires objects:
-# 'coef', as produced by 'logreg_generic.r'
-# 'dataSource' (to be used when naming plot files)
-# to be present in the environment
+# generate one plot per pest, each with one line per model
 
-# average coefficients for each pest
-coef_av <- aggregate(coef[,-which(colnames(coef)%in%c("Pest", "FocalHost"))],
-                     list(Pest = coef$Pest),
-                     mean)
+# 'coef_lst' is a list with one entry per pest, each entry containing one row per model run to compare
+
 
 # generate per-pest predictions for plotting curves
 
-# list to hold predictions
-curve_data <- vector("list", length = length(coef_av$Pest))
-names(curve_data) <- coef_av$Pest
+logit_lst <- vector("list", length = length(coef_lst))
+names(logit_lst) <- names(coef_lst)
 
-# loop to fill list
-for(i in seq_along(coef_av$Pest)){
-# generate predicted values at a range of PDs
-logit <- coef[i, "intercept"] + coef[i, "slope"] * log10(seq(0, 650, 1) + 1)
-# convert to probabilities
-prob_logit <- (exp(logit)/(1 + exp(logit)))
-# if predicted value was too big, Inf division has given NA - convert these
-# values to 1 and store
-curve_data[[i]] <- ifelse(is.na(prob_logit), 1, prob_logit)
-}
+for(i in 1:length(coef_lst)){
+
+for(j in 1:nrow(coef_lst[[i]])){
+
+if(j == 1){
+
+logit_lst[[i]] <- list(coef_lst[[i]][j,"intercept"] +
+                       (coef_lst[[i]][j,"slope"] * log10(seq(0,650,1) + 1)))
+}else{
+
+logit_lst[[i]][j] <- list(coef_lst[[i]][j,"intercept"] +
+                          (coef_lst[[i]][j,"slope"] * log10(seq(0,650,1) + 1)))
+}}}
+
+# convert to predicted probability
+prob_lst <- rapply(logit_lst, function(x){(exp(x)/(1 + exp(x)))}, how='list')
+
+# if predicted value was too big, division by Inf has given NA - convert to 1s
+prob_lst <- rapply(prob_lst, function(x){ifelse(is.na(x), 1, x)},
+                    how = "replace")
+
+
+# create output directory
+dirname <- paste0("output/plots_", gsub(":", "-", gsub(" ", "T", Sys.time())))
+dir.create(dirname, recursive = TRUE)
+
+
+# plotting loop
+for(i in 1:length(prob_lst)){
+
+# create colour palette
+col.pal <- hcl.colors(length(prob_lst[[i]]), palette = "viridis")
 
 # open plotting connection
-jpeg(paste0(dataSource, "_predSuit.jpg"),
+jpeg(paste0(dirname, "/", names(prob_lst)[i], ".jpg"),
      width = 85, height = 85, units = 'mm', res = 300)
 
 # base plot to provide axis labels, actual lines are omitted
-matplot(curve_data[[1]], type="n",
+matplot(prob_lst[[1]][[1]], type="n",
         ylab="Probability of sharing pest species",
         xlab="Phylogenetic distance from source to target host (My)",
         cex.lab = 0.5,
         cex=0.5, axes = F)
 
-# add one line per model run
-lapply(curve_data, function(x){lines(x, col="grey82")})
-# mean line
-lines(colMeans(data.frame(t(sapply(curve_data, c)))), col="firebrick")
+# add one line per model
+for(j in 1:length(prob_lst[[i]])){
+lines(prob_lst[[i]][[j]], col=col.pal[j])
+}
+
+# legend
+for(j in 1:length(prob_lst[[i]])){
+if(j==1){
+leg <- paste0("Model ", j)
+}else{
+leg <- c(leg, paste0("Model ", j))
+}}
+
+legend("topright",
+       legend = leg,
+       col = col.pal,
+       lty = c(1, 1),
+       lwd = c(3, 3),
+       cex = 0.3,
+       bty = "n")
 
 # x axis (below)
 axis(1, seq(0, 650, 50), seq(0, 650, 50),
@@ -50,6 +82,8 @@ axis(1, seq(0, 650, 50), seq(0, 650, 50),
 axis(2, seq(0, 1, 0.1), seq(0, 1, 0.1),
      col.axis = "black", las = 1, cex.axis = 0.5)
 
+
 # close connection
 dev.off()
+}
 
