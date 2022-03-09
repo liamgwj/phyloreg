@@ -14,6 +14,10 @@ db_safe <- read.csv("output/cleaned_Parker_database_2022-02-28.csv",
 
 phy_safe <- read.tree("output/cleaned_Parker_phylogeny_2022-02-28.nwk")
 
+phy_safe <- read.tree("output/QJ_Parker_2022-03-09.nwk")
+
+db_safe <- db_safe[,colnames(db_safe)%in%phy_safe$tip.label]
+
 # Robles 2017 --------------------------
 
 setwd("/home/liam/Documents/MSc/analysis/phyloreg/LJ_Robles")
@@ -62,7 +66,7 @@ phy <- keep.tip(phy_safe, colnames(db))
 # source model script ----------------------------------------------------------
 
 # set ID for file naming
-ID <- "parker-weed"
+ID <- "parker-QJ-half"
 
 source("/home/liam/Documents/MSc/analysis/phyloreg/logreg_generic.r")
 

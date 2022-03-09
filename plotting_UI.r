@@ -7,8 +7,8 @@
 
 setwd("/home/liam/Documents/MSc/analysis/phyloreg/LJ_Parker")
 
-coef_1 <- read.csv("output/model_coefficients/parker-all_coef-av_2022-03-08T09-49-55.csv")
-coef_2 <- read.csv("output/model_coefficients/parker-weed_coef-av_2022-03-08T10-33-40.csv")
+coef_1 <- read.csv("output/model_coefficients/parker-QJ-all_coef-av_2022-03-09T12-31-19.csv")
+coef_2 <- read.csv("output/model_coefficients/parker-QJ-half_coef-av_2022-03-09T12-33-37.csv")
 
 
 # Robles 2017 -------------------
@@ -34,7 +34,7 @@ coef_lst[[i]] <- rbind(coef_1[which(coef_1$Pest == coef_2$Pest[i]) ,],
 # source plotting script -------------------------------------------------------
 
 # set ID for file naming
-ID <- "parker-all-weed"
+ID <- "parker-QJ-ah"
 
 source("/home/liam/Documents/MSc/analysis/phyloreg/predict_plot_generic.r")
 

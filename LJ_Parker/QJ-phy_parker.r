@@ -67,17 +67,13 @@ keeptips[i] <- extract.clade(phy, mrcas[i])$tip.label[1]
 
 }}}
 
+names(keeptips) <- unique(tax$Genus)
+
+keeptips["Sorghum"] <- "Sorghum_amplum"
 
 phy <- keep.tip(phy, keeptips)
 
-phy$tip.label <- unique(tax$Genus)
+phy$tip.label <- tolower(unique(tax$Genus))
 
-
-
-
-
-
-
-
-
+write.tree(phy, paste0("output/QJ_Parker_", Sys.Date(), ".nwk"))
 
