@@ -12,7 +12,7 @@ setwd("/home/liam/Documents/MSc/analysis/phyloreg/LJ_Parker")
 db_safe <- read.csv("output/cleaned_Parker_database_2022-02-28.csv",
                     row.names = 1)
 
-phy_safe <- read.tree("output/cleaned_Parker_phylogeny_2022-02-28.nwk")
+#phy_safe <- read.tree("output/cleaned_Parker_phylogeny_2022-02-28.nwk")
 
 phy_safe <- read.tree("output/QJ_Parker_2022-03-09.nwk")
 
@@ -47,6 +47,12 @@ if(min(colSums(db)) == 0){
 db <- db[, -which(colSums(db) == 0)]
 }
 
+# inverse
+db <- db_safe[,sample(1:ncol(db_safe), prop*ncol(db_safe))]
+
+db <- db[-which(rowSums(db)==0),]
+
+
 # prune phy to remaining hosts
 phy <- keep.tip(phy_safe, colnames(db))
 
@@ -66,7 +72,7 @@ phy <- keep.tip(phy_safe, colnames(db))
 # source model script ----------------------------------------------------------
 
 # set ID for file naming
-ID <- "parker-QJ-half"
+ID <- "parker-QJ-halfhosts"
 
 source("/home/liam/Documents/MSc/analysis/phyloreg/logreg_generic.r")
 
