@@ -3,35 +3,63 @@
 
 library(ape)
 
+setwd("/home/liam/Documents/MSc/analysis/phyloreg")
+
 # choose dataset/model coefficient files to plot -------------------------------
 
-# Parker 2015 -------------------
+# parker
+topdir <- "datasets/Parker/"
 
-setwd("/home/liam/Documents/MSc/analysis/phyloreg/LJ_Parker")
+coef1id <- "cleaned_Parker_database_2022-02-28_coef-av"
 
-coef_1 <- read.csv("output/model_coefficients/parker-QJ-all_coef-av_2022-03-09T12-31-19.csv")
-coef_2 <- read.csv("output/model_coefficients/parker-QJ-halfhosts_coef-av_2022-03-10T15-38-24.csv")
+coef2id <- "cleaned_Parker_database_2022-02-28_p067_coef-av"
 
-# for phylo
-coef_2a <- read.csv("output/model_coefficients/parker-QJ-halfhosts_coef_2022-03-10T15-38-24.csv")
-phy <- read.tree("output/QJ_Parker_2022-03-09.nwk")
-#phy <- read.tree("output/cleaned_Parker_phylogeny_2022-02-28.nwk")
-db <- read.csv("output/cleaned_Parker_database_2022-02-28.csv",
+coef_1 <- read.csv(paste0(topdir, "model_coefficients/", coef1id, ".csv"))
+
+coef_2 <- read.csv(paste0(topdir, "model_coefficients/", coef2id, ".csv"))
+
+phy <- read.tree(paste0(topdir, "cleaned_data/",
+                        "QJ_Parker_2022-03-09.nwk"))
+
+db <- read.csv(paste0(topdir, "cleaned_data/",
+                      "cleaned_Parker_database_2022-02-28.csv"),
                row.names = 1)
 
-# Robles 2017 -------------------
+db_2 <- read.csv(paste0(topdir, "cleaned_data/database_subsets/",
+                        "cleaned_Parker_database_2022-02-28_p067.csv"),
+                 row.names = 1)
 
-setwd("/home/liam/Documents/MSc/analysis/phyloreg/LJ_Robles")
+db <- db[,which(colnames(db)%in%phy$tip.label)]
+phy <- keep.tip(phy, colnames(db))
+#if(min(colSums(db))==0){
+#db <- db[which(rowSums(db)==0) ,]}
 
-coef_1 <- read.csv("output/model_coefficients/robles-all_coef-av_2022-03-08T09-57-30.csv")
-coef_2 <- read.csv("output/model_coefficients/robles-half_coef-av_2022-03-08T09-58-43.csv")
 
-coef_2a <- read.csv("output/model_coefficients/robles-half_coef_2022-03-08T09-58-43.csv")
+# robles
 
-phy <- read.tree("indata/host.tree")
 
-db <- read.csv("output/cleaned_Robles_database_2022-03-07.csv",
+
+# simulated
+topdir <- "datasets/sim/"
+
+coef1id <- "sim-20220315T121340_coef-av"
+
+coef2id <- "sim-20220315T121340_p067_coef-av"
+
+coef_1 <- read.csv(paste0(topdir, "model_coefficients/", coef1id, ".csv"))
+
+coef_2 <- read.csv(paste0(topdir, "model_coefficients/", coef2id, ".csv"))
+
+phy <- read.tree(paste0(topdir, "simulated_data/",
+                        "sim-20220315T121340_phy.nwk"))
+
+db <- read.csv(paste0(topdir, "simulated_data/",
+                      "sim-20220315T121340_db.csv"),
                row.names = 1)
+
+db_2 <- read.csv(paste0(topdir, "simulated_data/database_subsets/",
+                        "sim-20220315T121340_db_p067.csv"),
+                 row.names = 1)
 
 
 # format list of coefficients --------------------------------------------------
@@ -47,13 +75,13 @@ coef_lst[[i]] <- rbind(coef_1[which(coef_1$Pest == coef_2$Pest[i]) ,],
 
 # phylogeny plotting ----------------------------------------------------------
 
-
+source("/home/liam/Documents/MSc/analysis/phyloreg/scripts/phylo_plot_generic.r")
 
 
 # curve plotting ---------------------------------------------------------------
 
 # set ID for file naming
-ID <- "parker-QJ-ah"
+dirname <- "datasets/Parker/curve_plots"
 
-source("/home/liam/Documents/MSc/analysis/phyloreg/predict_plot_generic.r")
+source("/home/liam/Documents/MSc/analysis/phyloreg/scripts/curve_plot_generic.r")
 

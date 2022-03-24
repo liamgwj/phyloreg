@@ -3,76 +3,46 @@
 
 library(ape)
 
+setwd("/home/liam/Documents/MSc/analysis/phyloreg")
+
 # choose dataset ---------------------------------------------------------------
 
-# Parker 2015 --------------------------
+# Parker
+topdir <- "datasets/Parker/"
 
-setwd("/home/liam/Documents/MSc/analysis/phyloreg/LJ_Parker")
+dbfile <- "cleaned_Parker_database_2022-02-28_p067"
 
-db_safe <- read.csv("output/cleaned_Parker_database_2022-02-28.csv",
-                    row.names = 1)
+db <- read.csv(paste0(topdir,"cleaned_data/database_subsets/",
+                      dbfile, ".csv"),
+               row.names = 1)
+phy <- read.tree(paste0(topdir, "cleaned_data/", "QJ_Parker_2022-03-09.nwk"))
 
-#phy_safe <- read.tree("output/cleaned_Parker_phylogeny_2022-02-28.nwk")
+# Robles
 
-phy_safe <- read.tree("output/QJ_Parker_2022-03-09.nwk")
+# simulated
+topdir <- "datasets/sim/"
 
-db_safe <- db_safe[,colnames(db_safe)%in%phy_safe$tip.label]
+dbfile <- "sim-20220315T121340_db_p067"
 
-# Robles 2017 --------------------------
+db <- read.csv(paste0(topdir,"simulated_data/database_subsets/",
+                      dbfile, ".csv"),
+               row.names = 1)
 
-setwd("/home/liam/Documents/MSc/analysis/phyloreg/LJ_Robles")
-
-db_safe <- read.csv("output/cleaned_Robles_database_2022-03-07.csv",
-                    row.names = 1)
-
-phy_safe <- read.tree("indata/host.tree")
-
-
-# subset as desired ------------------------------------------------------------
-
-# all pests ----------------------------
-
-db <- db_safe
-phy <- phy_safe
-
-# random subset of pests ---------------
-# choose proportion of pests to keep
-prop <- 1/2
-
-# remove 1-prop rows from db
-db <- db_safe[sample(1:nrow(db_safe), prop*nrow(db_safe)),]
-
-# if any hosts have had all their pests removed, remove them
-if(min(colSums(db)) == 0){
-db <- db[, -which(colSums(db) == 0)]
-}
-
-# inverse
-db <- db_safe[,sample(1:ncol(db_safe), prop*ncol(db_safe))]
-
-db <- db[-which(rowSums(db)==0),]
+phy <- read.tree(paste0(topdir,"simulated_data/","sim-20220315T121340_phy.nwk"))
 
 
-# prune phy to remaining hosts
-phy <- keep.tip(phy_safe, colnames(db))
+# if necessary, remove columns/tips to ensure perfect intersection of db and phy
 
-# single pest type ---------------------
-# Parker types: Bacterium Fungus Insect Mite Mollusk Nematode Phytoplasma
-# Viroid Virus Weed
+db <- db[,which(colnames(db)%in%phy$tip.label)]
 
-db <- db_safe[grep("Weed", rownames(db_safe)),]
+phy <- keep.tip(phy, colnames(db))
 
-if(min(colSums(db)) == 0){
-db <- db[, -which(colSums(db) == 0)]
-}
-
-phy <- keep.tip(phy_safe, colnames(db))
+#if(min(colSums(db))==0){
+#db <- db[which(rowSums(db)==0) ,]
+#}
 
 
 # source model script ----------------------------------------------------------
 
-# set ID for file naming
-ID <- "parker-QJ-halfhosts"
-
-source("/home/liam/Documents/MSc/analysis/phyloreg/logreg_generic.r")
+source("/home/liam/Documents/MSc/analysis/phyloreg/scripts/logreg_generic.r")
 
