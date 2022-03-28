@@ -1,4 +1,7 @@
-# LJ 2022-02-26 generic phylogenetic logistic regression workflow
+# LJ 2022-02-26
+# function to perform phylogenetic logistic regression
+
+phylogreg <- function(phy, db, outdir){
 
 library(ape)
 
