@@ -46,7 +46,7 @@ for(i in 1:length(prob_lst)){
 col.pal <- hcl.colors(length(prob_lst[[i]]), palette = "viridis")
 
 # open plotting connection
-jpeg(paste0(dirname, "/", names(prob_lst)[i], ".jpg"),
+jpeg(paste0("output/", names(prob_lst)[i], ".jpg"),
      width = 85, height = 85, units = 'mm', res = 300)
 
 # base plot to provide axis labels, actual lines are omitted

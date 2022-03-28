@@ -1,6 +1,6 @@
 # LJ 2022-02-08 simulate a simple phylogeny and "host" tips
 
-setwd("/home/liam/Documents/MSc/analysis/phyloreg/r")
+#setwd("/home/liam/Documents/MSc/analysis/phyloreg/r")
 
 # load packages
 library(ape)
@@ -14,7 +14,7 @@ now <- gsub("[:-]", "", gsub(" ", "T", Sys.time()))
 npest <- 3
 
 # simulate phylogeny/ies
-phy <- sim.bd.taxa(n = 5,
+phy <- sim.bd.taxa(n = 20,
                    numbsim = 1,
                    lambda = 0.3,
                    mu = 0.25,
@@ -41,10 +41,12 @@ char <- lapply(phy, function(x){sim.char(phy = x,
 
 row_i <- ifelse(t(data.frame(char[[1]]))==2, 1, 0)
 
-if(i=1){
+if(i==1){
 out <- row_i}else{
 out <- rbind(out, row_i)}
 }
+
+rownames(out) <- paste0("p", 1:npest)
 
 # write out
 if(!dir.exists("indata/simulated")){

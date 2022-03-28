@@ -1,7 +1,7 @@
 # LJ 2022-02-26
-# function to perform phylogenetic logistic regression
+# perform phylogenetic logistic regression
 
-phylogreg <- function(phy, db, outdir){
+# requires objects 'phy', 'db', and 'runID'
 
 library(ape)
 
@@ -82,15 +82,14 @@ coef <- rbind(coef, run_coef)
 
 # write out -------------------------------------------------------------------
 
-dirname <- paste0(topdir, "model_coefficients/")
 
-if(!dir.exists(dirname)){
-dir.create(dirname)
+if(!dir.exists("output")){
+dir.create("output")
 }
 
 # all coefficients
 write.csv(coef,
-          paste0(dirname, gsub("_db", "", dbfile), "_coef.csv"),
+          paste0("output/", runID, subID, "_coef.csv"),
           row.names = FALSE)
 
 # average coefficients for each pest
@@ -99,6 +98,6 @@ coef_av <- aggregate(coef[,-which(colnames(coef)%in%c("Pest", "FocalHost"))],
                      mean)
 
 write.csv(coef_av,
-          paste0(dirname, gsub("_db", "", dbfile), "_coef-av.csv"),
+          paste0("output/", runID, subID, "_coef-av.csv"),
           row.names = FALSE)
 

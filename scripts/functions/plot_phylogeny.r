@@ -108,7 +108,7 @@ edgelines[which.edge(phy, misTips[i])] <- 2
 
 # plot ------------------------------------------------------------------------
 
-phydir <- paste0(topdir, "phylo_plots/", coef1id, "_vs_", coef2id)
+phydir <- paste0("output/phyplots/", runID, "_vs", subID)
 
 if(!dir.exists(phydir)){
 dir.create(phydir, recursive = TRUE)

@@ -1,6 +1,12 @@
 # LJ 2022-03-14 sample a subset of the host/pest matrix
 
-# env holds: db
+# read in data to subsample ---------------------------------------------------
+
+dir <- "indata/simulated/"
+runID <- "sim-20220328T124900"
+
+db <- read.csv(paste0(dir, runID, "_db.csv"), row.names = 1)
+
 
 # subset of hosts -------------------------------------------------------------
 
@@ -33,11 +39,7 @@ db[focal,] <- ifelse(!colnames(db)%in%keepers, NA, db[focal,])
 
 # write out -------------------------------------------------------------------
 
-if(!dir.exists(paste0(dir, "/database_subsets"))){
-dir.create(paste0(dir, "/database_subsets"))
-}
-
 write.csv(db,
-          paste0(dir, "/database_subsets/", file,
-                 "_p", gsub("\\.", "", round(prop, 2)), ".csv"))
+          paste0("output/", runID,
+                 "_p", gsub("\\.", "", round(prop, 2)), "_db.csv"))
 
